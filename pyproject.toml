@@ -1,0 +1,28 @@
+[project]
+name = "batchlink"
+dynamic = ["version"]
+description = "Batch link files without modifying original files."
+authors = [
+    {name = "Jax Young", email = "jaxvanyang@gmail.com"},
+]
+dependencies = []
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.scripts]
+batchlink = "batchlink.cli:main"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.version]
+source = "file"
+path = "src/batchlink/__init__.py"
+
+[tool.pylint."messages control"]
+disable = ["too-many-arguments"]
