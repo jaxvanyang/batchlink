@@ -1,6 +1,7 @@
 """Module providing batchlink core APIs."""
 
 import shutil
+import sys
 from os import PathLike
 from pathlib import Path
 
@@ -46,28 +47,82 @@ def formatted_paths(paths: list[Path], template: str) -> list[Path]:
     return new_paths
 
 
-def remove(file: PathLike, *, dry_run: bool = False) -> None:
-    """Remove this file, symbolic link or directory, if exists.
+def color_print(*strs, sep=" ", end="\n", file=None, flush=False) -> None:
+    """Print colored text of objects to the text stream file if it's interactive.
 
-    This function also print a message before removing.
+    If the file is not interactive, replacement fields are removed from format strings.
 
     Args:
-        file: The file to be removed.
+        *strs: The format strings to be printed, which may contain the replacement
+          fields - black, red, green, yellow, blue, magenta, cyan, white and reset. For
+          example, '{green}hello{reset} {red}world{reset}'.
+        sep: String inserted between values. Default is a space.
+        end: String appended after the last value. Default is a newline.
+        file: A file-like object (stream). Default is the current sys.stdout.
+        flush: Whether to forcibly flush the stream.
     """
 
-    if not isinstance(file, Path):
-        file = Path(file)
+    if file is None:
+        file = sys.stdout
 
-    if file.is_dir() or file.is_file():
-        print(f"\x1b[33mRemove\x1b[00m {file}")
+    color_dict = (
+        {
+            "black": "\x1b[30m",
+            "red": "\x1b[31m",
+            "green": "\x1b[32m",
+            "yellow": "\x1b[33m",
+            "blue": "\x1b[34m",
+            "magenta": "\x1b[35m",
+            "cyan": "\x1b[36m",
+            "white": "\x1b[37m",
+            "reset": "\x1b[00m",
+        }
+        if file.isatty()
+        else {
+            "black": "",
+            "red": "",
+            "green": "",
+            "yellow": "",
+            "blue": "",
+            "magenta": "",
+            "cyan": "",
+            "white": "",
+            "reset": "",
+        }
+    )
+
+    strs = [str.format(**color_dict) for str in strs]
+
+    print(*strs, sep=sep, end=end, file=file, flush=flush)
+
+
+def remove(path: PathLike, *, dry_run: bool = False, file=None) -> None:
+    """Remove the file, symbolic link or directory of the path, if exists.
+
+    This function also print a message to the file before removing.
+
+    Args:
+        path: The path of file to be removed.
+        file: The file-like object (stream) to print message to. Default is the current
+          sys.stdout.
+    """
+
+    if file is None:
+        file = sys.stdout
+
+    if not isinstance(path, Path):
+        path = Path(path)
+
+    if path.is_dir() or path.is_file():
+        color_print(f"{{yellow}}Remove{{reset}} {path}", file=file)
 
     if dry_run:
         return
 
-    if file.is_dir():
-        file.rmdir()
-    elif file.is_file():
-        file.unlink()
+    if path.is_dir():
+        path.rmdir()
+    elif path.is_file():
+        path.unlink()
 
 
 def batch_link(
@@ -124,7 +179,9 @@ def batch_link(
         if force:
             remove(dest_path, dry_run=dry_run)
 
-        print(f"\x1b[34mRename\x1b[00m {src_path} \x1b[34mto\x1b[00m {dest_path}")
+        color_print(
+            f"{{blue}}Rename{{reset}} {src_path} {{blue}}to{{reset}} {dest_path}"
+        )
 
         if dry_run:
             return
@@ -135,7 +192,7 @@ def batch_link(
         if force:
             remove(dest_path, dry_run=dry_run)
 
-        print(f"\x1b[34mCopy\x1b[00m {src_path} \x1b[34mto\x1b[00m {dest_path}")
+        color_print(f"{{blue}}Copy{{reset}} {src_path} {{blue}}to{{reset}} {dest_path}")
 
         if dry_run:
             return
@@ -157,8 +214,8 @@ def batch_link(
         if force:
             remove(dest_path, dry_run=dry_run)
 
-        print(
-            f"\x1b[34mCreate {link_type} link\x1b[00m {dest_path} \x1b[34mto\x1b[00m "
+        color_print(
+            f"{{blue}}Create {link_type} link{{reset}} {dest_path} {{blue}}to{{reset}} "
             f"{src_path}"
         )
 
