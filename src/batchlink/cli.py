@@ -68,7 +68,7 @@ def make_parser() -> ArgumentParser:
         "--dest",
         default=Path(),
         type=Path,
-        help="Set the target directory. Default is the current working directory.",
+        help="Set the destination directory. Default is the current working directory.",
         metavar="directory",
     )
     parser.add_argument(
@@ -85,7 +85,11 @@ def make_parser() -> ArgumentParser:
     )
     parser.add_argument(
         "output_template",
-        help="Set the template of output link (or file) paths.",
+        help=(
+            "Set the template of output link (or file) paths. The template is a Python "
+            "format string. Available replacement fields are: i, num, path, name, "
+            "suffix, suffixes, stem."
+        ),
     )
 
     return parser
