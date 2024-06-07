@@ -101,6 +101,10 @@ def main(args: list[str] | None = None) -> int:  # pylint: disable=C0116
 
     args = make_parser().parse_args(args)
 
+    if not args.dest.is_dir():
+        print(f"FileNotFoundError: [Erroro 2] No such directory: {args.dest}")
+        return 2
+
     src_files = sorted(
         file.relative_to(args.src) for file in args.src.glob(args.input_pattern)
     )
