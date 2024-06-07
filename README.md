@@ -7,7 +7,7 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Flake8: checked](https://img.shields.io/badge/flake8-checked-blueviolet)](https://flake8.pycqa.org)
 
-[![PyPI - Version](https://img.shields.io/pypi/v/batchlink)](https://pypi.org/project/batchlink)
+[![Packaging status](https://repology.org/badge/vertical-allrepos/python:batchlink.svg)](https://repology.org/project/python:batchlink/versions)
 
 Batch link files without modifying original files.
 
