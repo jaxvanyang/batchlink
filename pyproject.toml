@@ -9,6 +9,21 @@ dependencies = []
 requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "MIT"}
+keywords = ["batch-link", "batch-rename", "auto-rename"]
+classifiers = [
+	"Programming Language :: Python :: 3 :: Only",
+	"License :: OSI Approved :: MIT License",
+	"Operating System :: POSIX",
+	"Development Status :: 5 - Production/Stable",
+	"Intended Audience :: End Users/Desktop",
+	"Operating System :: OS Independent",
+	"Topic :: Utilities"
+]
+
+[project.urls]
+Source = "https://github.com/jaxvanyang/batchlink"
+Repository = "https://github.com/jaxvanyang/batchlink.git"
+Issues = "https://github.com/jaxvanyang/batchlink/issues"
 
 [project.scripts]
 batchlink = "batchlink.cli:main"
