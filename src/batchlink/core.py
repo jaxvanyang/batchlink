@@ -171,9 +171,7 @@ def batch_link(
         if force:
             remove(dest_path, dry_run=dry_run)
 
-        color_print(
-            f"{{blue}}Rename{{reset}} {src_path} {{blue}}to{{reset}} {dest_path}"
-        )
+        color_print(f"{{blue}}Rename{{reset}} {src_path} -> {dest_path}")
 
         if dry_run:
             return
@@ -184,7 +182,7 @@ def batch_link(
         if force:
             remove(dest_path, dry_run=dry_run)
 
-        color_print(f"{{blue}}Copy{{reset}} {src_path} {{blue}}to{{reset}} {dest_path}")
+        color_print(f"{{blue}}Copy{{reset}} {src_path} -> {dest_path}")
 
         if dry_run:
             return
@@ -213,8 +211,7 @@ def batch_link(
             remove(dest_path, dry_run=dry_run)
 
         color_print(
-            f"{{blue}}Create {link_type} link{{reset}} {dest_path} {{blue}}to{{reset}} "
-            f"{src_path}"
+            f"{{blue}}Create {link_type} link{{reset}} {dest_path} -> {src_path}"
         )
 
         if dry_run:
