@@ -41,3 +41,6 @@ path = "src/batchlink/__init__.py"
 
 [tool.pylint."messages control"]
 disable = ["too-many-arguments"]
+
+[tool.isort]
+line_length = 88

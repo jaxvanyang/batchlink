@@ -88,6 +88,12 @@ def color_print(*strs, sep=" ", end="\n", file=None, flush=False) -> None:
     print(*strs, sep=sep, end=end, file=file, flush=flush)
 
 
+def add_underline(text: str) -> str:
+    """Add underline to the text."""
+
+    return f"\x1b[4m{text}\x1b[m"
+
+
 def remove(path: PathLike, *, dry_run: bool = False, file=None) -> None:
     """Remove the file, symbolic link or directory of the path, if exists.
 
@@ -105,8 +111,10 @@ def remove(path: PathLike, *, dry_run: bool = False, file=None) -> None:
     if not isinstance(path, Path):
         path = Path(path)
 
+    path_text = add_underline(path)
+
     if path.is_dir() or path.is_file():
-        color_print(f"{{yellow}}Remove{{reset}} {path}", file=file)
+        color_print(f"{{yellow}}Remove{{reset}} {path_text}", file=file)
 
     if dry_run:
         return
@@ -168,10 +176,13 @@ def batch_link(
         raise ValueError("dest_paths has repeated paths")
 
     def rename_file(src_path: Path, dest_path: Path):
+        src_path_text = add_underline(src_path)
+        dest_path_text = add_underline(dest_path)
+
         if force:
             remove(dest_path, dry_run=dry_run)
 
-        color_print(f"{{blue}}Rename{{reset}} {src_path} -> {dest_path}")
+        color_print(f"{{blue}}Rename{{reset}} {src_path_text} -> {dest_path_text}")
 
         if dry_run:
             return
@@ -179,10 +190,13 @@ def batch_link(
         src_path.rename(dest_path)
 
     def copy_file(src_path: Path, dest_path: Path):
+        src_path_text = add_underline(src_path)
+        dest_path_text = add_underline(dest_path)
+
         if force:
             remove(dest_path, dry_run=dry_run)
 
-        color_print(f"{{blue}}Copy{{reset}} {src_path} -> {dest_path}")
+        color_print(f"{{blue}}Copy{{reset}} {src_path_text} -> {dest_path_text}")
 
         if dry_run:
             return
@@ -207,11 +221,15 @@ def batch_link(
                 else src_path.resolve()
             )
 
+        src_path_text = add_underline(src_path)
+        dest_path_text = add_underline(dest_path)
+
         if force:
             remove(dest_path, dry_run=dry_run)
 
         color_print(
-            f"{{blue}}Create {link_type} link{{reset}} {dest_path} -> {src_path}"
+            f"{{blue}}Create {link_type} link{{reset}} {dest_path_text} -> "
+            f"{src_path_text}"
         )
 
         if dry_run:
