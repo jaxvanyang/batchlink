@@ -205,6 +205,12 @@ def batch_link(
     def link_file(src_path: Path, dest_path: Path):
         link_type = "symbolic" if symbolic else "hard"
         if symbolic:
+            if sys.version_info[0] != 3 or sys.version_info[1] < 12:
+                raise ValueError(
+                    "batchlink only support creating relative symbolic links with "
+                    "Python 3.12+ for now"
+                )
+
             src_path = (
                 src_path.relative_to(dest_path.parent, walk_up=True)
                 if relative
