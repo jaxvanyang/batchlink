@@ -1,5 +1,6 @@
 """Module providing batchlink core APIs."""
 
+import re
 import shutil
 import sys
 from os import PathLike
@@ -50,7 +51,8 @@ def formatted_paths(paths: list[Path], template: str) -> list[Path]:
 def color_print(*strs, sep=" ", end="\n", file=None, flush=False) -> None:
     """Print colored text of objects to the text stream file if it's interactive.
 
-    If the file is not interactive, replacement fields are removed from format strings.
+    If the file is not interactive, ANSI escape codes are removed from formatted
+    strings.
 
     Args:
         *strs: The format strings to be printed, which may contain the replacement
@@ -65,33 +67,23 @@ def color_print(*strs, sep=" ", end="\n", file=None, flush=False) -> None:
     if file is None:
         file = sys.stdout
 
-    color_dict = (
-        {
-            "black": "\x1b[30m",
-            "red": "\x1b[31m",
-            "green": "\x1b[32m",
-            "yellow": "\x1b[33m",
-            "blue": "\x1b[34m",
-            "magenta": "\x1b[35m",
-            "cyan": "\x1b[36m",
-            "white": "\x1b[37m",
-            "reset": "\x1b[00m",
-        }
-        if file.isatty()
-        else {
-            "black": "",
-            "red": "",
-            "green": "",
-            "yellow": "",
-            "blue": "",
-            "magenta": "",
-            "cyan": "",
-            "white": "",
-            "reset": "",
-        }
-    )
+    color_dict = {
+        "black": "\x1b[30m",
+        "red": "\x1b[31m",
+        "green": "\x1b[32m",
+        "yellow": "\x1b[33m",
+        "blue": "\x1b[34m",
+        "magenta": "\x1b[35m",
+        "cyan": "\x1b[36m",
+        "white": "\x1b[37m",
+        "reset": "\x1b[m",
+    }
 
-    strs = [str.format(**color_dict) for str in strs]
+    strs = [s.format(**color_dict) for s in strs]
+
+    if not file.isatty():
+        escape = re.compile(r"\x1b\[(\d|;)*m", re.ASCII)
+        strs = [re.sub(escape, "", s) for s in strs]
 
     print(*strs, sep=sep, end=end, file=file, flush=flush)
 
