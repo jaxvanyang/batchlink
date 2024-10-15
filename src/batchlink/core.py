@@ -48,7 +48,7 @@ def formatted_paths(paths: list[Path], template: str) -> list[Path]:
     return new_paths
 
 
-def color_print(*strs, sep=" ", end="\n", file=None, flush=False) -> None:
+def pretty_print(*strs, sep=" ", end="\n", file=None, flush=False) -> None:
     """Print colored text of objects to the text stream file if it's interactive.
 
     If the file is not interactive, ANSI escape codes are removed from formatted
@@ -122,7 +122,7 @@ def remove(path: PathLike, *, dry_run: bool = False, file=None) -> None:
     path_text = add_underline(_highlight_numbers(path))
 
     if path.is_dir() or path.is_file():
-        color_print(f"{{yellow}}Remove{{reset}} {path_text}", file=file)
+        pretty_print(f"{{yellow}}Remove{{reset}} {path_text}", file=file)
 
     if dry_run:
         return
@@ -190,7 +190,7 @@ def batch_link(
         if force:
             remove(dest_path, dry_run=dry_run)
 
-        color_print(f"{{blue}}Rename{{reset}} {src_path_text} -> {dest_path_text}")
+        pretty_print(f"{{blue}}Rename{{reset}} {src_path_text} -> {dest_path_text}")
 
         if dry_run:
             return
@@ -204,7 +204,7 @@ def batch_link(
         if force:
             remove(dest_path, dry_run=dry_run)
 
-        color_print(f"{{blue}}Copy{{reset}} {src_path_text} -> {dest_path_text}")
+        pretty_print(f"{{blue}}Copy{{reset}} {src_path_text} -> {dest_path_text}")
 
         if dry_run:
             return
@@ -235,7 +235,7 @@ def batch_link(
         if force:
             remove(dest_path, dry_run=dry_run)
 
-        color_print(
+        pretty_print(
             f"{{blue}}Create {link_type} link{{reset}} {dest_path_text} -> "
             f"{src_path_text}"
         )
