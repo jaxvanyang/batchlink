@@ -94,6 +94,14 @@ def add_underline(text: str) -> str:
     return f"\x1b[4m{text}\x1b[m"
 
 
+def _highlight_numbers(path: PathLike) -> str:
+    """Return a string representation of the path with highlighted numbers."""
+
+    numbers = re.compile(r"(\d+)")
+
+    return re.sub(numbers, "\x1b[4;32m\\1\x1b[m", str(path))
+
+
 def remove(path: PathLike, *, dry_run: bool = False, file=None) -> None:
     """Remove the file, symbolic link or directory of the path, if exists.
 
@@ -111,7 +119,7 @@ def remove(path: PathLike, *, dry_run: bool = False, file=None) -> None:
     if not isinstance(path, Path):
         path = Path(path)
 
-    path_text = add_underline(path)
+    path_text = add_underline(_highlight_numbers(path))
 
     if path.is_dir() or path.is_file():
         color_print(f"{{yellow}}Remove{{reset}} {path_text}", file=file)
@@ -176,8 +184,8 @@ def batch_link(
         raise ValueError("dest_paths has repeated paths")
 
     def rename_file(src_path: Path, dest_path: Path):
-        src_path_text = add_underline(src_path)
-        dest_path_text = add_underline(dest_path)
+        src_path_text = add_underline(_highlight_numbers(src_path))
+        dest_path_text = add_underline(_highlight_numbers(dest_path))
 
         if force:
             remove(dest_path, dry_run=dry_run)
@@ -190,8 +198,8 @@ def batch_link(
         src_path.rename(dest_path)
 
     def copy_file(src_path: Path, dest_path: Path):
-        src_path_text = add_underline(src_path)
-        dest_path_text = add_underline(dest_path)
+        src_path_text = add_underline(_highlight_numbers(src_path))
+        dest_path_text = add_underline(_highlight_numbers(dest_path))
 
         if force:
             remove(dest_path, dry_run=dry_run)
@@ -221,8 +229,8 @@ def batch_link(
                 else src_path.resolve()
             )
 
-        src_path_text = add_underline(src_path)
-        dest_path_text = add_underline(dest_path)
+        src_path_text = add_underline(_highlight_numbers(src_path))
+        dest_path_text = add_underline(_highlight_numbers(dest_path))
 
         if force:
             remove(dest_path, dry_run=dry_run)
