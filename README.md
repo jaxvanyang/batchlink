@@ -22,6 +22,11 @@ may want this.
 - A CLI to easily batch link, rename, copy files.
 - An extensible library.
 
+## Installation
+
+Besides package managers, you can also use self-contained executables for Linux, macOS
+and Windows from [Releases](https://github.com/jaxvanyang/batchlink/releases).
+
 ## Examples
 
 Create example files:
