@@ -1,6 +1,5 @@
 # Reserved for testing
-a/
-b/
+test/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
